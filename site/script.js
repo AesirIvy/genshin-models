@@ -1,10 +1,10 @@
 'use strict';
 void !async function() {
   /** debugging redirect while I work on the site **/
-  if (window.location.host !== 'localhost') {
-    window.location.href = 'https://miyo.icu/';
-    return;
-  }
+  // if (window.location.host !== 'localhost') {
+  //   window.location.href = 'https://miyo.icu/';
+  //   return;
+  // }
   const main = document.querySelector('main');
   const loadingDiv = document.querySelector('main > div#loading');
   const appDiv = document.querySelector('main > div#app');
@@ -155,6 +155,56 @@ void !async function() {
   `;
 
   const modelsTab = tabsDiv.querySelector(`div[data-tabid="models"]`);
+  modelsTab.classList = 'splitview';
+
+  const modelList = document.createElement('div');
+  modelList.id = 'modelList'
+  window.addEventListener('resize', () => {
+    modelList.style.height = window.modelViewer.getHeightLimit() - 2*parseInt(window.getComputedStyle(modelList, null).getPropertyValue('padding').split(0, 2)) + 'px';
+  });
+  modelsTab.appendChild(modelList);
+
+  const filterDiv = document.createElement('div');
+  filterDiv.classList = 'filtercontainer'
+  modelList.appendChild(filterDiv);
+  {
+    const filterInput = document.createElement('input');
+    filterInput.placeholder = 'Search character by name'
+    filterInput.addEventListener('input', () => {
+      const filterText = filterInput.value.toLowerCase().trim();
+      const items = modelItemContainer.querySelectorAll(':scope > div.modelitem');
+      items.forEach(item => {
+        const nameDiv = item.querySelector('div.modelitemname');
+        if (nameDiv) {
+          const name = nameDiv.textContent.toLowerCase();
+          item.style.display = name.includes(filterText) ? '' : 'none';
+        }
+      });
+    });
+    filterDiv.appendChild(filterInput);
+  }
+
+  const modelItemContainer = document.createElement('div');
+  modelItemContainer.classList = 'modelitemcontainer';
+  modelList.appendChild(modelItemContainer);
+
+  {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'modelViewer';
+    modelsTab.appendChild(canvas);
+
+    const closeViewer = document.createElement('button');
+    closeViewer.id = 'closeViewer';
+    closeViewer.textContent = 'Close preview';
+    closeViewer.addEventListener('click', (event) => {
+      canvas.style.display = 'none';
+      event.target.style.display = 'none';
+      const modelList = document.getElementById('modelList');
+      modelList.style.display = 'block';
+    });
+    modelsTab.appendChild(closeViewer);
+  }
+
   for (let i = 0, character; i < data._$.characters.length; ++i) {
     if (data._$.characters[i].includes('[Emotes]')) continue;
     const node = document.createElement('div');
@@ -171,6 +221,10 @@ void !async function() {
     const characterCount = data.getCharacterCount(character.name);
 
     {
+      const modelInfo = document.createElement('div');
+      modelInfo.classList = 'modelinfo'
+      node.append(modelInfo);
+
       const wishIcon = document.createElement('img');
       wishIcon.classList = 'modelitemicon';
       wishIcon.loading = 'lazy';
@@ -180,28 +234,17 @@ void !async function() {
         wishIcon.src = 'site/default.png';
       });
       if (wishIcon.src.includes('(')) console.warn(character.name);
-      node.appendChild(wishIcon);
-    };
+      modelInfo.appendChild(wishIcon);
 
-    {
       const temp = document.createElement('div');
       temp.classList = 'modelitemname';
       temp.textContent = character.name;
-      node.appendChild(temp);
+      modelInfo.appendChild(temp);
     };
 
     const central = document.createElement('div');
     central.classList = 'modelitemcentral';
     node.appendChild(central);
-
-    const downloadButton = document.createElement('a');
-    downloadButton.classList = 'modelitemdownloadbutton';
-    downloadButton.target = '_blank';
-    downloadButton.href = character.downloadurl;
-    downloadButton.download = `${character.version} - ${character.downloadfile}`;
-    downloadButton.setAttribute('aria-role', 'button');
-    downloadButton.textContent = 'Download model';
-    central.appendChild(downloadButton);
 
     const versionOption = document.createElement('select');
     versionOption.addEventListener('change', () => {
@@ -216,6 +259,30 @@ void !async function() {
       versionOption.appendChild(temp);
     };
     central.appendChild(versionOption);
+
+    const buttonList = document.createElement('div');
+    buttonList.classList = 'modelbuttonlist';
+    central.appendChild(buttonList);
+
+    const downloadButton = document.createElement('a');
+    downloadButton.classList = 'modelitemdownloadbutton';
+    downloadButton.target = '_blank';
+    downloadButton.href = character.downloadurl;
+    downloadButton.download = `${character.version} - ${character.downloadfile}`;
+    downloadButton.setAttribute('aria-role', 'button');
+    downloadButton.textContent = 'Download model';
+    buttonList.appendChild(downloadButton);
+
+    const previewButton = document.createElement('button');
+    previewButton.classList = 'modelitempreviewbutton';
+    previewButton.textContent = 'Preview model';
+    previewButton.addEventListener('click', () => {
+      const versionSelect = node.querySelector('select');
+      const selectedVersion = versionSelect.value;
+      const characterData = node._character[selectedVersion];
+      window.modelViewer.preview(selectedVersion, characterData.name);
+    });
+    buttonList.appendChild(previewButton);
 
     let versions = [character.version];
     if (character.version !== '1.0') {
@@ -247,7 +314,7 @@ void !async function() {
 
     statsHolder.appendChild(statsNode);
     statsHolder.appendChild(document.createElement('br'));
-    modelsTab.appendChild(node);
+    modelItemContainer.appendChild(node);
   }
   statsTab.appendChild(statsHolder);
 
@@ -311,6 +378,9 @@ void !async function() {
   }
 
   main.classList = 'running';
+
+  modelList.style.height = window.modelViewer.getHeightLimit() - 2*parseInt(window.getComputedStyle(modelList, null).getPropertyValue('padding').split(0, 2)) + 'px';
+
   globalThis.GenshinModels = data;
 
   {
