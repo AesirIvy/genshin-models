@@ -164,8 +164,23 @@ div#app div.splitview > canvas {
   cursor: pointer;
 }
 
-div#app div.splitview > button#closeViewer {
+div#app div#canvasToolbar {
   display: none;
+  align-items: center;
+  gap: 2rem;
+  z-index: 2;
+  position: absolute;
+  margin: 1rem;
+}
+
+div#app div#canvasToolbar button {
+  cursor: pointer;
+}
+
+div#app div#canvasToolbar div {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 div#app div#modelList {
@@ -298,12 +313,6 @@ div#app[data-tabid="credits"] {
 
   div#app canvas {
     display: none;
-  }
-
-  div#app button#closeViewer {
-    display: block;
-    position: absolute;
-    z-index: 2;
   }
 }
 

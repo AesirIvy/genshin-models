@@ -189,20 +189,33 @@ void !async function() {
   modelList.appendChild(modelItemContainer);
 
   {
+    const canvasContainer = document.createElement('div');
+    modelsTab.appendChild(canvasContainer);
+
+    const canvasToolbar = document.createElement('div');
+    canvasToolbar.id = 'canvasToolbar';
+    canvasContainer.appendChild(canvasToolbar);
+
     const canvas = document.createElement('canvas');
     canvas.id = 'modelViewer';
-    modelsTab.appendChild(canvas);
+    canvasContainer.appendChild(canvas);
 
     const closeViewer = document.createElement('button');
-    closeViewer.id = 'closeViewer';
     closeViewer.textContent = 'Close preview';
-    closeViewer.addEventListener('click', (event) => {
+    closeViewer.addEventListener('click', () => {
       canvas.style.display = 'none';
-      event.target.style.display = 'none';
+      canvasToolbar.style.display = 'none';
       const modelList = document.getElementById('modelList');
       modelList.style.display = 'block';
     });
-    modelsTab.appendChild(closeViewer);
+    canvasToolbar.appendChild(closeViewer);
+
+    const lightSourceInputDiv = document.createElement('div');
+    lightSourceInputDiv.innerHTML = `
+    <label>Light Source</label>
+    <input id='lightSourceSlider' type='range' min='0' max='1' step='0.01' value='0.75'>
+    `
+    canvasToolbar.appendChild(lightSourceInputDiv);
   }
 
   for (let i = 0, character; i < data._$.characters.length; ++i) {
