@@ -12,13 +12,19 @@
     --dark-background-colour: #111111;
     --dark-background-colour-darker: #090909;
     --dark-background-colour-evendarker: #070707;
+
+  --colour-scheme: unknown;
 }
 
 @media (prefers-color-scheme: light) {
-  :root {/*== empty ==*/}
+  :root {
+    --colour-scheme: light;
+  }
 }
 @media (prefers-color-scheme: dark) {
-  :root {/*== empty ==*/}
+  :root {
+    --colour-scheme: dark;
+  }
 }
 
 /*======================================================*/
@@ -65,13 +71,13 @@ main.loading > div#loading {
   display: block;
   text-align: center;
   place-content: center;
-  
+
   font-weight: 450;
   font-size: x-large;
 }
 main.loading > div#loading.error {
   color: red;
-} 
+}
 main.loading > div#app {
   display: none;
   visibility: hidden;
@@ -159,6 +165,9 @@ div#app div.modelitem {
   width: 100%;
   min-height: 265px;
   height: 265px;
+  max-height: 265px;
+  overflow-x: unset;
+  overflow-y: clip;
 
   display: flex;
 
@@ -220,7 +229,7 @@ div#app div.modelitem > div.modelitemcentral > a.modelitemdownloadbutton {
 
   width: 100px;
   height: fit-content;
-  
+
   padding: 5px;
   background: #00ff00;
   border: #ff0000 4px solid;
