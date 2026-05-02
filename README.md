@@ -8,6 +8,8 @@ https://docs.google.com/spreadsheets/d/1KWw_FFQJyWj7dMYpca1MHtNdufqoKelbJhB0om7u
 
 ## CLI Usage
 
+WARNING: You WILL need the 7Zip CLI and it must be on the path; This is for extracting 7Z and RAR files and then compressing the ZIP files again.
+
 Just run `npm ci` (node v22)
 
 and then you can use `node . --help` to see help on using the CLI.
