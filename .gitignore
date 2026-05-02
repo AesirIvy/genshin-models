@@ -1,2 +1,4 @@
 /node_modules/
+/.tmp/
 *.csv
+!/Genshin Character Model URLs (reformatted) - Sheet1.csv
