@@ -35,8 +35,7 @@ function initOnce() {
   scene.background = new THREE.Color(0x222233);
 
   const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(50, 50),
-    new THREE.MeshStandardMaterial({ color: 0x29291b })
+    new THREE.PlaneGeometry(50, 50), new THREE.MeshStandardMaterial({ color: 0x29291b })
   );
   ground.rotation.x = -Math.PI / 2;
   ground.position.y = 0;
@@ -46,7 +45,7 @@ function initOnce() {
   camera = new THREE.PerspectiveCamera(
     45, (getWidthLimit()) / getHeightLimit(), 0.1, 1000
   );
-  camera.position.set(0, 15, 37);
+  camera.position.set(0, 20, 40);
   camera.lookAt(0, 10, 0);
 
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
