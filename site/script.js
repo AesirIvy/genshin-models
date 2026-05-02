@@ -332,7 +332,7 @@ void !async function() {
   statsTab.appendChild(statsHolder);
 
   tabsDiv.querySelector(`div[data-tabid="credits"]`).innerHTML = `<div style="margin-top: 15px; margin-left: 15px"><span>
-    Created by <a href="https://miyo.icu/">Miyo Sho</a> &lt;<a href="mailto:meow@miyo.icu">meow@miyo.icu</a>&gt;.<br />
+    Created by <a href="https://github.com/yuri-kiss/">Miyo Sho</a> &lt;<a href="mailto:yri5@duck.com">yri5@duck.com</a>&gt;.<br />
     Models are sourced from miHoYo and so are the wish images and backgrounds, I don't own any of the assets used on this website.<br />
     Special thanks to <a href="https://www.hoyolab.com/accountCenter/postList?id=82180096">JohnSlaughter</a> for making the original spreadsheet this was based on!<br />
   </span></div>`;
