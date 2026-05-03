@@ -40,7 +40,27 @@ def rename_largest_pmx(dest_dir):
     if largest == new_name:
         return
     largest.rename(new_name)
-    print(f"Renamed {largest} -> {new_name}")
+    print(f"Renamed {largest} → {new_name}")
+
+def get_empty_file(target_dir):
+    for content in target_dir.iterdir():
+        if content.is_dir():
+            continue
+        if content.stat().st_size == 0:
+            content.unlink()
+            return content.stem
+    return ""
+
+def remove_parent_name_in_files(target_dir, parent_name):
+    for content in list(target_dir.iterdir()):
+        if content.is_dir() and content.stem == parent_name[:-1]:
+            sub_parent_name = get_empty_file(content)
+            remove_parent_name_in_files(content, sub_parent_name)
+            new_dir = content.with_name(sub_parent_name[:-1])
+            content.rename(new_dir)
+        elif content.is_file() and content.stem.startswith(parent_name):
+            new_stem = content.stem.replace(parent_name, "")
+            content.rename(content.with_stem(new_stem))
 
 def print_error(error):
     print("\x1b[31m" + error + "\x1b[0m", file=sys.stderr)
@@ -103,3 +123,7 @@ for subdir in ver_dir.iterdir():
 
         flatten_if_single_folder(dest_dir)
         rename_largest_pmx(dest_dir)
+
+        # normalize archive's structure
+        parent_name = get_empty_file(dest_dir)
+        remove_parent_name_in_files(dest_dir, parent_name)

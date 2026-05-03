@@ -9,7 +9,7 @@ let currentModel = null;
 const loader = new MMDLoader();
 
 function getWidthLimit() {
-  return window.innerWidth > 1024 ? window.innerWidth / 2 : window.innerWidth;
+  return window.innerWidth > 1024 ? Math.round(window.innerWidth / 2) : window.innerWidth;
 }
 
 function getHeightLimit() {
@@ -32,10 +32,10 @@ function initOnce() {
   if (!canvas) return;
 
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x222233);
+  scene.background = new THREE.Color(0x1f1f21);
 
   const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(50, 50), new THREE.MeshStandardMaterial({ color: 0x29291b })
+    new THREE.PlaneGeometry(50, 50), new THREE.MeshStandardMaterial({ color: 0x21211f })
   );
   ground.rotation.x = -Math.PI / 2;
   ground.position.y = 0;
@@ -73,7 +73,7 @@ function initOnce() {
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   scene.add(dirLight);
 
-  lightSourceSlider = document.getElementById('lightSourceSlider');
+  const lightSourceSlider = document.getElementById('lightSourceSlider');
   lightSourceSlider.addEventListener('input', (event) => {
     const intensity = event.target.value;
     dirLight.intensity = intensity;
